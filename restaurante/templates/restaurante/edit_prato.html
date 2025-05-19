@@ -1,0 +1,108 @@
+{% extends "restaurante/base.html" %}
+
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4">{{ prato.nome }}</h2>
+            
+            {# Exibir mensagens de erro do formulário geral ou de validações da view #}
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <form method="POST">
+              {% csrf_token %}
+              
+              {# Renderiza os campos do PratoForm (nome, descrição, etc.) #}
+              {% for field in form %}
+                <div class="mb-3">
+                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                  {% endif %}
+                  {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for error in field.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+
+              <div class="mb-4">
+                <h3 class="mt-4">Ingredientes:</h3>
+                <p class="form-text">Selecione os ingredientes e informe a quantidade utilizada em gramas (ex: 150.75).</p>
+                
+                {# Loop através da lista de dados de ingredientes preparada na view #}
+                {% for ing_data in ingredientes_data %}
+                  <div class="row mb-2 align-items-center ingredient-row">
+                    <div class="col-7 col-sm-8">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input ingredient-checkbox" 
+                               name="ingredientes" value="{{ ing_data.id }}" id="ingrediente_{{ ing_data.id }}"
+                               {% if ing_data.selecionado %} checked {% endif %}>
+                        <label class="form-check-label" for="ingrediente_{{ ing_data.id }}">{{ ing_data.nome }}</label>
+                      </div>
+                    </div>
+                    <div class="col-5 col-sm-4">
+                      {# Campo de quantidade - valor e estado vêm diretamente da view #}
+                      <input type="number" step="0.01" name="quantidade_{{ ing_data.id }}" 
+                             class="form-control quantity-input" placeholder="Qtd (g)"
+                             value="{{ ing_data.quantidade }}" {# Valor direto da view #}
+                             style="display: {% if ing_data.selecionado %}block{% else %}none{% endif %};" 
+                             {% if ing_data.selecionado %}required{% endif %}> {# Required direto da view #}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                <a href="{% url 'cardapio' %}" class="btn btn-secondary">Cancelar</a> {# Adapte o nome da URL se necessário #}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // O mesmo JavaScript da versão anterior deve funcionar aqui,
+    // pois ele depende do estado do checkbox e do nome do input de quantidade.
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.ingredient-checkbox').forEach(checkbox => {
+        const ingredientId = checkbox.value;
+        const quantityInput = document.querySelector(`input[name="quantidade_${ingredientId}"]`);
+
+        function toggleQuantityInput() {
+          if (!quantityInput) return; // Segurança
+          if (checkbox.checked) {
+            quantityInput.style.display = 'block';
+            quantityInput.required = true;
+          } else {
+            quantityInput.style.display = 'none';
+            quantityInput.required = false;
+            quantityInput.value = ''; // Limpa o valor se desmarcado
+          }
+        }
+
+        checkbox.addEventListener('change', toggleQuantityInput);
+        
+        // O estado inicial já é definido pelos atributos 'style' e 'required' no HTML.
+      });
+    });
+  </script>
+
+{% endblock %}
+

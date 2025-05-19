@@ -1,0 +1,55 @@
+{% extends "restaurante/base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1>Criar Pedido</h1>
+  
+  <form method="post">
+    {% csrf_token %}
+    <fieldset class="mb-3">
+      <legend>Selecione os Pratos</legend>
+      {% for prato in pratos %}
+        <div class="form-check mb-2">
+          <input class="form-check-input" 
+                 type="checkbox" 
+                 name="prato" 
+                 id="prato_{{ prato.id_prato }}" 
+                 value="{{ prato.id_prato }}">
+          <label class="form-check-label" for="prato_{{ prato.id_prato }}">
+            {{ prato.nome }} — R$ {{ prato.preco }}
+          </label>
+          
+         
+          <div id="quantidade_{{ prato.id_prato }}" class="quantidade-input" style="display:none;">
+            <label for="quantidade_{{ prato.id_prato }}" class="form-label ms-3">
+              Quantidade de pratos:
+            </label>
+            <input type="number"
+                   name="quantidade_{{ prato.id_prato }}"
+                   min="1"
+                   value="1"
+                   class="form-control form-control-sm d-inline-block w-auto ms-3"
+                   placeholder="Qtd">
+          </div>
+        </div>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Confirmar Pedido</button>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll('input[type=checkbox][name=prato]').forEach(cb => {
+    const qtyDiv = document.getElementById(`quantidade_${cb.value}`);
+    cb.addEventListener('change', () => {
+      if (cb.checked) {
+        qtyDiv.style.display = 'inline-block';  
+      } else {
+        qtyDiv.style.display = 'none';  
+        const qtyInput = qtyDiv.querySelector('input');
+        qtyInput.value = 1;  
+      }
+    });
+  });
+</script>
+{% endblock %}

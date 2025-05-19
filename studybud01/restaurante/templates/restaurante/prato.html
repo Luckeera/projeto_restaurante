@@ -1,0 +1,33 @@
+{% extends "restaurante/base.html" %}
+
+{% block content %}
+<div class="card">
+  {# <img src="..." class="card-img-top" alt="{{ prato.nome }}"> #}
+  <div class="card-body">
+    <h1 class="card-title">{{ prato.nome }}</h1>
+    <p class="card-text text-muted">{{ prato.descricao|default:"Sem descrição." }}</p>
+    <h4 class="text-success my-3">R$ {{ prato.preco }}</h4>
+    
+    <h5>Ingredientes:</h5>
+    {% if prato.pratoingrediente_set.all %}
+      <ul class="list-group list-group-flush mb-3">
+        {% for item in prato.pratoingrediente_set.all %}
+          <li class="list-group-item">{{ item.ingrediente.nome }} - {{ item.quantidade }}g</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">Ingredientes não especificados.</p>
+    {% endif %}
+
+    <a href="{% url 'cardapio' %}" class="btn btn-secondary">← Voltar ao Cardápio</a>
+    {% if user.is_authenticated and not user.is_staff %}
+      {# Adicionar ao carrinho/pedido - Lógica a implementar #}
+      {# <a href="#" class="btn btn-success">Adicionar ao Pedido</a> #}
+    {% endif %}
+    {% if user.is_staff %}
+      <a href="{% url 'edit_prato' prato.id_prato %}" class="btn btn-secondary">Editar Prato</a>
+      <a href="{% url 'delete_prato' prato.id_prato %}" class="btn btn-danger">Excluir Prato</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

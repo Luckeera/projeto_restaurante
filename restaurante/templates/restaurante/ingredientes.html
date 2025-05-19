@@ -1,0 +1,32 @@
+{% extends "restaurante/base.html" %}
+
+{% block content %}
+  <h1>Lista de Ingredientes</h1>
+
+  <table>
+      <thead>
+          <tr>
+              <th>Nome</th>
+              <th>Quantidade no Estoque (g)</th>
+              <th>Ações</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for ingrediente in ingredientes %}
+          <tr>
+              <td>{{ ingrediente.nome }}</td>
+              <td>{{ ingrediente.estoque_quantidade }} g</td> 
+              <td>
+                  <a href="{% url 'editar_ingrediente' ingrediente.id %}">Editar</a>
+              </td>
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="3">Nenhum ingrediente encontrado.</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+
+  <a href="{% url 'criar_ingrediente' %}">Adicionar Novo Ingrediente</a>
+{% endblock %}

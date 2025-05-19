@@ -1,0 +1,32 @@
+{% extends "restaurante/base.html" %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4">Repor Estoque de {{ ingrediente.nome }}</h2>
+            
+            <div class="alert alert-info mb-4">
+              <p class="mb-0">Quantidade atual: {{ estoque.quantidade }}g</p>
+            </div>
+
+            <form method="POST">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success">Repor Estoque</button>
+              </div>
+            </form>
+
+            <div class="text-center mt-4">
+              <a href="{% url 'estoque' %}" class="text-decoration-none link-secondary">
+                ← Voltar ao Estoque
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

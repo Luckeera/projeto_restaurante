@@ -1,0 +1,27 @@
+{% extends "restaurante/base.html" %} 
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h2>Registrar Nova Conta</h2>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            
+            {{ form.as_p }} {# Renderiza o formulário como parágrafos #}
+            
+            <button type="submit" class="btn btn-primary w-100 mt-3">Registrar</button>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          Já tem uma conta? <a href="{% url 'login' %}">Faça login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

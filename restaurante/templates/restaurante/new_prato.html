@@ -1,0 +1,82 @@
+{% extends "restaurante/base.html" %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4">Criar Novo Prato</h2>
+            <form method="post">
+              {% csrf_token %}
+              {{ form.non_field_errors }}
+              <div class="mb-3">
+                <label for="id_nome" class="form-label">Nome:</label>
+                {{ form.nome }}
+              </div>
+              <div class="mb-3">
+                <label for="id_descricao" class="form-label">Descrição:</label>
+                {{ form.descricao }}
+              </div>
+              <div class="mb-3">
+                <label for="id_preco" class="form-label">Preço:</label>
+                {{ form.preco }}
+              </div>
+              <div class="mb-3">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="card-title mb-0">Ingredientes</h5>
+                  </div>
+                  <div class="card-body">
+                    {% for ing in ingredientes %}
+                      <div class="row mb-2">
+                        <div class="col-8">
+                          <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ing_{{ ing.id }}" name="ingredientes" value="{{ ing.id }}">
+                            <label class="form-check-label" for="ing_{{ ing.id }}">{{ ing.nome }}</label>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <input type="number" class="form-control" id="quant_{{ ing.id }}" name="quantidade_{{ ing.id }}" step="any" placeholder="Qtd" style="display: none;">
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Salvar Prato</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+      <div class="col-auto">
+        <p class="text-muted">
+          <a href="{% url 'cardapio' %}" class="text-decoration-none link-secondary">← Voltar</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('input[name="ingredientes"]').forEach(cb => {
+      const qty = document.getElementById('quant_' + cb.value);
+      function toggle() {
+        if (cb.checked) {
+          qty.style.display = 'block';
+          qty.required = true;
+        } else {
+          qty.style.display = 'none';
+          qty.required = false;
+          qty.value = '';
+        }
+      }
+      cb.addEventListener('change', toggle);
+      toggle();
+    });
+  </script>
+{% endblock %}

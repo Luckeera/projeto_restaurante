@@ -1,0 +1,62 @@
+{% extends "restaurante/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h2>Login</h2>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+
+            {# Exibe erros gerais do formulário #}
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {# Campo Email (anteriormente username) #}
+            <div class="mb-3">
+              <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label> {# O label já deve ser "Email" #}
+              {{ form.username }} {# Renderiza o input de email #}
+              {% if form.username.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.username.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            {# Campo Senha #}
+            <div class="mb-3">
+              <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+              {{ form.password }} {# Renderiza o input de senha #}
+              {% if form.password.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.password.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Entrar</button>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          Não tem uma conta? <a href="{% url 'register' %}">Registre-se aqui</a>
+        </div>
+        <div>
+          staff@gmail.com<br>
+          senha: senha<br>
+          cliente@gmail.com<br>
+          senha: burythelight
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

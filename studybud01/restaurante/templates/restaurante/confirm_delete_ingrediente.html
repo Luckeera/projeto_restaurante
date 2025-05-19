@@ -1,0 +1,14 @@
+{% extends "restaurante/base.html" %}
+
+{% block content %}
+  <h1>Excluir Ingrediente</h1>
+
+  <p>Você tem certeza que deseja excluir o ingrediente 
+     <strong>{{ ingrediente.nome }}</strong>?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sim, excluir</button>
+    <a href="{% url 'estoque' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Restaurante</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 80px; /* Espaço para o header fixo */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Barra de Navegação Fixa no Topo -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'cardapio' %}">Restaurante</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cardapio' %}">Cardápio</a>
+                    </li>
+
+                    {% if user.is_authenticated and not user.is_staff %}
+                        
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'meus_pedidos' %}">Meus Pedidos</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <form method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button class="nav-link btn btn-link" type="submit" >Logout</button>
+                            </form>
+                        </li>
+
+                    
+                    {% endif %}
+                    
+                    {% if not user.is_authenticated and not user.is_staff %}
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'meus_pedidos' %}">Meus Pedidos</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <form method="POST" action="{% url 'login' %}">
+                                {% csrf_token %}
+                                <button class="nav-link btn btn-link" type="submit" >Login</button>
+                            </form>
+                        </li>
+                    
+                    {% endif %}
+
+                    
+
+                    {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'estoque' %}">Estoque</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pedido' %}">Pedidos</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <form method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button class="nav-link btn btn-link" type="submit" >Logout</button>
+                            </form>
+                        </li>
+                        
+                    {% endif %}
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Exibir Mensagens de Sucesso/Erro -->
+    {% if messages %}
+        <div class="container mt-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="container mt-5">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+{% extends "restaurante/base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4">Lista de Pedidos</h1>
+
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>ID Pedido</th>
+        <th>Itens do Pedido</th>
+        <th>Status</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in pedidos %}
+      <tr>
+        <td>{{ pedido.id }}</td>
+        <td>
+          <ul class="mb-0">
+            {% for item in pedido.pratos.all %}
+              <li>
+                {{ item.prato.nome }} — Quantidade: {{ item.quantidade }}
+              </li>
+            {% endfor %}
+          </ul>
+        </td>
+        <td>
+          <form method="post" action="{% url 'atualizar_status_pedido' pedido.id %}">
+            {% csrf_token %}
+            <select name="status" class="form-select form-select-sm d-inline w-auto"
+                    onchange="this.form.submit()">
+              <option value="P" {% if pedido.status == 'P' %}selected{% endif %}>Pendente</option>
+              {# Mude 'E' para 'C' e 'Entregue' para 'Concluído' #}
+              <option value="C" {% if pedido.status == 'C' %}selected{% endif %}>Concluído</option> 
+            </select>
+          </form>
+        </td>
+        <td>{{ pedido.data_criacao|date:"d/m/Y H:i" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center">Nenhum pedido encontrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
